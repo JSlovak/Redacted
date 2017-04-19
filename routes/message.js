@@ -6,37 +6,41 @@ const router = express.Router();
 let message = null;
 
 router.use((req, res, next) => {
-  //console.log (req.body.message);
   message = req.body.message;
-  newMessage = redact(message);
-  //console.log(newMessage);
-  req.body = newMessage;
+  redacted = redact(message);
+  req.body = redacted;
   next();
 });
 
 // default message route
 router.route('/')
   .post(function(req, res) {
-    res.send(message);
+    res.send(redacted);
   });
 
 module.exports = router;
 
-// Helper function
+
+
+
+// Helper functions
 // Checks the message for blacklisted words
 function redact(message){
   let wordArr = message.split(" ");
-  let redactedMessage = null;
+  let redactedMessage = [];
 
   for(let i = 0; i<wordArr.length; i++){
     console.log(wordArr[i]);
     console.log(typeof(wordArr[i]));
 
     if (isBlackListed(wordArr[i]) === true){
-      console.log(translation(wordArr[i]));
+      redactedMessage.push(translation(wordArr[i]));
+    } else {
+      redactedMessage.push(wordArr[i]);
     }
   }
-  //return redactedMessage.join(" ");
+  console.log(redactedMessage.join(" "));
+  return redactedMessage.join(" ");
 }
 
 // Checks to see if the word is on the "black-list"
@@ -49,8 +53,9 @@ function isBlackListed(word){
 
 // Translates black-listed word
 function translation(word){
+
   let gramsAppropriate = {
-    Selfie : "self-portrait",
+    selfie : "self-portrait",
     yummers : "delicious",
     outchea : "are out here",
     bruh : "wow",
@@ -61,6 +66,5 @@ function translation(word){
     yolo : "carpe diem"
   };
 
-  console.log(gramsAppropriate.word);
-  return gramsAppropriate.word;
+  return gramsAppropriate[word];
 }
