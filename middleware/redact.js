@@ -1,8 +1,8 @@
 /*jshint esversion: 6 */
 
 // Require in other middleware modules needed to complete the function
-translation = require('./translation');
-isBlackListed = require('./isBlackListed');
+const translation = require('./translation');
+const isBlackListed = require('./isBlackListed');
 
 
 // Takes in message
